@@ -29,7 +29,7 @@ class _GroupsWidgetBody extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,6 +60,13 @@ class _GroupsWidgetBody extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+                padding: const EdgeInsets.only(bottom: 10, top: 5),
+                child: Container(
+                  color: Colors.grey,
+                  width: double.infinity,
+                  height: 1,
+                )),
             const Expanded(child: _GroupListWidget())
           ],
         ),
@@ -100,17 +107,15 @@ class _GroupListRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final group =
-        GroupsWidgetModelProvider.read(context)!.model.groups[indexInList];
+    final model = GroupsWidgetModelProvider.read(context)!.model;
+    final group = model.groups[indexInList];
     return Slidable(
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
         extentRatio: 0.3,
         children: [
           SlidableAction(
-            onPressed: (context) => GroupsWidgetModelProvider.read(context)!
-                .model
-                .deleteGroup(indexInList),
+            onPressed: (context) => model.deleteGroup(indexInList),
             backgroundColor: Colors.blueGrey,
             icon: Icons.delete,
             label: 'Delete',
@@ -125,7 +130,7 @@ class _GroupListRowWidget extends StatelessWidget {
         trailing: const Icon(
           Icons.chevron_right,
         ),
-        onTap: () {},
+        onTap: () => model.showTasks(context, indexInList),
       ),
     );
   }
