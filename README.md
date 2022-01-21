@@ -1,6 +1,6 @@
-# todo_list
+# ToDo List
 
-A new Flutter project.
+Flutter Project
 
 ## Getting Started
 
