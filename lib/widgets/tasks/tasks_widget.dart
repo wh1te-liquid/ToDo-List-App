@@ -18,7 +18,7 @@ class _TasksWidgetState extends State<TasksWidget> {
 
     if (_model == null) {
       final groupKey = ModalRoute.of(context)!.settings.arguments as int;
-      _model = TasksWidgetModel(groupIndex: groupKey);
+      _model = TasksWidgetModel(groupKey: groupKey);
     }
   }
 
@@ -43,10 +43,13 @@ class TasksWidgetBody extends StatefulWidget {
 
 class _TasksWidgetBodyState extends State<TasksWidgetBody> {
   bool isHiden = false;
+  bool isChanging = false;
 
   @override
   Widget build(BuildContext context) {
     final model = TasksWidgetModelProvider.watch(context)?.model;
+    final TextEditingController controller =
+        TextEditingController(text: model?.group?.name);
     final title = model?.group?.name ?? "Задачи";
     return Scaffold(
       body: SafeArea(
@@ -62,9 +65,29 @@ class _TasksWidgetBodyState extends State<TasksWidgetBody> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: Text(
-                      title,
-                      style: const TextStyle(fontSize: 24),
+                    child: InkWell(
+                      onTap: () => setState(() {
+                        isChanging = !isChanging;
+                      }),
+                      child: isChanging
+                          ? TextField(
+                              cursorColor: Colors.black,
+                              controller: controller,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Название группы"),
+                              onEditingComplete: () => setState(() {
+                                isChanging = !isChanging;
+                                if (controller.text.isNotEmpty) {
+                                  model?.changeTaskName(
+                                      newTaskText: controller.text);
+                                }
+                              }),
+                            )
+                          : Text(
+                              title,
+                              style: const TextStyle(fontSize: 24),
+                            ),
                     ),
                   ),
                   Row(
@@ -178,7 +201,7 @@ class _TaskListRowWidget extends StatelessWidget {
             onPressed: (context) => model.deleteTask(indexInList),
             backgroundColor: task.isDone ? Colors.blueGrey : Colors.blueAccent,
             icon: Icons.delete,
-            label: 'Delete',
+            label: 'Удалить',
           ),
         ],
       ),

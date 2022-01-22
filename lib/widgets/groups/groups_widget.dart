@@ -118,7 +118,7 @@ class _GroupListRowWidget extends StatelessWidget {
             onPressed: (context) => model.deleteGroup(indexInList),
             backgroundColor: Colors.blueGrey,
             icon: Icons.delete,
-            label: 'Delete',
+            label: 'Удалить',
           ),
         ],
       ),

@@ -4,7 +4,7 @@ import 'package:todo_list/domain/entity/group.dart';
 import 'package:todo_list/domain/entity/task.dart';
 
 class TasksWidgetModel extends ChangeNotifier {
-  int groupIndex;
+  int groupKey;
   late final Future<Box<Group>> _groupBox;
   Group? _group;
 
@@ -14,12 +14,17 @@ class TasksWidgetModel extends ChangeNotifier {
 
   List<Task> get tasks => _tasks.toList();
 
-  TasksWidgetModel({required this.groupIndex}) {
+  TasksWidgetModel({required this.groupKey}) {
     _setup();
   }
 
   void deleteTask(int taskIndex) {
     _group?.tasks?.deleteFromHive(taskIndex);
+    _group?.save();
+  }
+
+  void changeTaskName({required String newTaskText}) {
+    _group?.name = newTaskText;
     _group?.save();
   }
 
@@ -44,17 +49,17 @@ class TasksWidgetModel extends ChangeNotifier {
   void _setupListen() async {
     final box = await _groupBox;
     _readTasks();
-    box.listenable(keys: [groupIndex]).addListener(_readTasks);
+    box.listenable(keys: [groupKey]).addListener(_readTasks);
   }
 
   void showForm(BuildContext context) {
     Navigator.of(context)
-        .pushNamed('/groups/tasks/form', arguments: groupIndex);
+        .pushNamed('/groups/tasks/form', arguments: groupKey);
   }
 
   void _loadGroup() async {
     final box = await _groupBox;
-    _group = box.get(groupIndex);
+    _group = box.get(groupKey);
     notifyListeners();
   }
 
