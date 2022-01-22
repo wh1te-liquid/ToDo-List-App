@@ -61,7 +61,7 @@ class _GroupsWidgetBody extends StatelessWidget {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.only(bottom: 10, top: 5),
+                padding: const EdgeInsets.only(top: 5),
                 child: Container(
                   color: Colors.grey,
                   width: double.infinity,
